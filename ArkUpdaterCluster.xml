@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>ArkUpdaterCluster</Name>
+  <Repository>growlithe/ark-server-mod-restart:latest</Repository>
+  <Registry/>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support/>
+  <Project/>
+  <Overview/>
+  <Category/>
+  <WebUI/>
+  <TemplateURL/>
+  <Icon/>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled>1612497666</DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Description/>
+  <Networking>
+    <Mode>bridge</Mode>
+    <Publish/>
+  </Networking>
+  <Data>
+    <Volume>
+      <HostDir>/mnt/user/appdata/ark-se/ShooterGame/Content/Mods</HostDir>
+      <ContainerDir>/Mods</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir>/var/run/docker.sock</HostDir>
+      <ContainerDir>/var/run/docker.sock</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
+  <Environment>
+    <Variable>
+      <Value>192.168.1.150</Value>
+      <Name>MCRCON_HOST</Name>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Value>NotMyPassword</Value>
+      <Name>MCRCON_PASS</Name>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Value>27075,27076,27077,27078,27079,27080,27081,27082,27083</Value>
+      <Name>MCRCON_PORTS</Name>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Value>ARKcluster1Island,ARKcluster1Rag,ARKcluster1Center,ARKcluster1Scorch,ARKcluster1Aberration,ARKcluster1Extinction,ARKcluster1Genesis,ARKcluster1Valguero,ARKcluster1Crystal</Value>
+      <Name>CONTAINER_NAMES</Name>
+      <Mode/>
+    </Variable>
+  </Environment>
+  <Labels/>
+  <Config Name="Mods" Target="/Mods" Default="" Mode="rw" Description="Container Path: /Mods" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/ark-se/ShooterGame/Content/Mods</Config>
+  <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="" Mode="rw" Description="Container Path: /var/run/docker.sock" Type="Path" Display="always" Required="false" Mask="false">/var/run/docker.sock</Config>
+  <Config Name="RCON Host" Target="MCRCON_HOST" Default="" Mode="" Description="Container Variable: MCRCON_HOST" Type="Variable" Display="always" Required="false" Mask="false">192.168.1.150</Config>
+  <Config Name="Server Password" Target="MCRCON_PASS" Default="" Mode="" Description="Container Variable: MCRCON_PASS" Type="Variable" Display="always" Required="false" Mask="false">NotMyPassword</Config>
+  <Config Name="RCON ports" Target="MCRCON_PORTS" Default="" Mode="" Description="Container Variable: RCON_PORTS" Type="Variable" Display="always" Required="false" Mask="false">27075,27076,27077,27078,27079,27080,27081,27082,27083</Config>
+  <Config Name="Container Names" Target="CONTAINER_NAMES" Default="" Mode="" Description="Container Variable: CONTAINER_NAMES" Type="Variable" Display="always" Required="false" Mask="false">ARKcluster1Island,ARKcluster1Rag,ARKcluster1Center,ARKcluster1Sc
+orch,ARKcluster1Aberration,ARKcluster1Extinction,ARKcluster1Genesis,ARKcluster1Valguero,ARKcluster1Crystal</Config>
+</Container>
