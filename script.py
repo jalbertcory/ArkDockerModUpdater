@@ -142,31 +142,35 @@ def get_mod_info(mod_ids):
 
 while True:
     print("Update Checked At: " + datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-    # list .mod files in mod folder
-    mod_files = [ f.name for f in os.scandir(r"Mods") if not f.is_dir() ]
-    mods_updated = 0
+    try:
+        # list .mod files in mod folder
+        mod_files = [ f.name for f in os.scandir(r"Mods") if not f.is_dir() ]
+        mods_updated = 0
 
-    modIds = [x.replace('Mods/', '').replace('.mod', '') for x in mod_files]
-    modIds.remove('111111111') # the default mod does not need to be queried and the result is missing info anyway
+        modIds = [x.replace('Mods/', '').replace('.mod', '') for x in mod_files]
+        modIds.remove('111111111') # the default mod does not need to be queried and the result is missing info anyway
 
-    print(f'Mod Ids to check: {modIds}')
+        print(f'Mod Ids to check: {modIds}')
 
-    mods = get_mod_info(modIds)
+        mods = get_mod_info(modIds)
 
-    if mods is not None:
-        for mod in mods:
-            modId = mod['publishedfileid']
-            modName = mod['title']
-            updatedTime = os.path.getmtime(f'Mods/{modId}.mod')
-            remoteUpdateTime = mod['time_updated']
-            requires_update = updatedTime < remoteUpdateTime
-            print(f'Mod "{modName}" ID {modId} updated locally {updatedTime} remote {remoteUpdateTime}.  Requires Update: {requires_update}')
-            # determine if a mod updated and increment
-            if requires_update:
-                mods_updated += 1
+        if mods is not None:
+            for mod in mods:
+                modId = mod['publishedfileid']
+                modName = mod['title']
+                updatedTime = os.path.getmtime(f'Mods/{modId}.mod')
+                remoteUpdateTime = mod['time_updated']
+                requires_update = updatedTime < remoteUpdateTime
+                print(f'Mod "{modName}" ID {modId} updated locally {updatedTime} remote {remoteUpdateTime}.  Requires Update: {requires_update}')
+                # determine if a mod updated and increment
+                if requires_update:
+                    mods_updated += 1
 
-    print(f'{mods_updated} mods updated')
-    if (mods_updated > 0):
-        restartTheContainers()
+        print(f'{mods_updated} mods updated')
+        if (mods_updated > 0):
+            restartTheContainers()
+    except:
+        e = str(sys.exc_info()[0])
+        print(f'Failed to check update {e}')
 
     time.sleep(300)
