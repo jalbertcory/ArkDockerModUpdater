@@ -20,18 +20,24 @@ print(f'Containers to restart: {containersToRestart}')
 ports = os.getenv('MCRCON_PORTS').split(',')
 print(f'RCON ports: {ports}')
 
+hosts = os.getenv('MCRCON_HOST').split(',')
+print(f'RCON hosts: {hosts}')
+
 __containers_that_were_runnning = []
 
-def sendToArk(port, command):
-    print(f'Sending command to ARK on {port}: {command}')
-    result = ansi_escape.sub('', subprocess.run(f'mcrcon -P {port} "{command}"', shell=True, capture_output=True, text=True).stdout)
+def sendToArk(port, host, command):
+    print(f'Sending command to ARK on {host}:{port}: {command}')
+    result = ansi_escape.sub('', subprocess.run(f'mcrcon -H "{host}" -P {port} "{command}"', shell=True, capture_output=True, text=True).stdout)
     print(result)
     return result
 
 
 def sendToAllServersAndWait(command, wait):
-    for port in ports:
-        sendToArk(port, command)
+    for i in range(len(ports)):
+        host = hosts[0]
+        if (len(hosts) > 1):
+            host = hosts[i]
+        sendToArk(ports[i], host, command)
     time.sleep(wait)
 
 
@@ -73,7 +79,7 @@ def waitForServerActive(name, client):
         if time.time() > timeout:
             print(f'Waiting for {name} to start failed, starting other servers normally')
             break
-        if 'Server received, But no response!!' in sendToArk(ports[0], "broadcast Checking if server is live."):
+        if 'Server received, But no response!!' in sendToArk(ports[0], hosts[0], "broadcast Checking if server is live."):
             print(f'Container {name} successfully started')
             break
         time.sleep(15)

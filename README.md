@@ -17,6 +17,8 @@ If you are using the [ich777/steamcmd](https://hub.docker.com/r/ich777/steamcmd)
 * /serverdata/Steam/steamapps <> /mnt/cache/appdata/steamcmd/steamapps
 * /serverdata/serverfiles/Engine/Binaries/ThirdParty/SteamCMD/Linux/steamapps <> /mnt/cache/appdata/steamcmd/steamapps
 
+Also make sure to add `-automanagedmods` to the ExtraParameters
+
 ### RCON
 Additionally, any RCON must be setup correctly which means you need these parameters in your startup command line: `?RCONPort=<SomePort>?RCONEnabled=True?ServerAdminPassword=<YourServerAdminPassword>`.  The server password must be here and not just in your GameUserSettings.ini for RCON to work.
 
@@ -30,7 +32,8 @@ This container needs the following container mounts:
 
 ### Variables
 The following environment variables are also needed:
-* MCRCON_HOST=\<ServerHostIP>
+* MCRCON_HOST=\<ServerHostIP> or list of hosts
+   * This can either be a single host (likely your server IP), or a list of csv of hosts that match with the RCON ports and container names
 * MCRCON_PASS=\<YourServerAdminPassword>
 * RCON_PORTS= csv list of ports for all servers in the cluster (or single server)
    * for example my cluster of all 9 maps this is `27075,27076,27077,27078,27079,27080,27081,27082,27083`
@@ -39,7 +42,7 @@ The following environment variables are also needed:
    * for example my cluster of all 9 maps this is `ARKcluster1Island,ARKcluster1Rag,ARKcluster1Center,ARKcluster1Scorch,ARKcluster1Aberration,ARKcluster1Extinction,ARKcluster1Genesis,ARKcluster1Valguero,ARKcluster1Crystal`
    * The first server in this list will be restarted (so mods can be updated), and all other servers will be stopped and then started once the first is back online (checked via RCON command)
 
-> **It is important that RCON_PORTS and CONTAINER_NAMES have the same number of servers and that the first one in the list is the same server.**  The following servers and ports if messed up will still work, but ideally set them up correctly
+> **It is important that RCON_PORTS, MCRCON_HOST, and CONTAINER_NAMES have the same number of servers and are in the same order.  eg the first host, port, and container name line up, and the second of each line up, etc.**
 
 # Container
 The container image is available on dockerhub as: `growlithe/ark-server-mod-restart`
