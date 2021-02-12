@@ -25,8 +25,8 @@ print(f'RCON hosts: {hosts}')
 
 __containers_that_were_runnning = []
 
-def sendToArk(port, host, command):
-    print(f'Sending command to ARK on {host}:{port}: {command}')
+def sendToArk(port, host, container_name, command):
+    print(f'Sending command to ARK image "{container_name}" on {host}:{port}: {command}')
     result = ansi_escape.sub('', subprocess.run(f'mcrcon -H "{host}" -P {port} "{command}"', shell=True, capture_output=True, text=True).stdout)
     print(result)
     return result
@@ -37,7 +37,7 @@ def sendToAllServersAndWait(command, wait):
         host = hosts[0]
         if (len(hosts) > 1):
             host = hosts[i]
-        sendToArk(ports[i], host, command)
+        sendToArk(ports[i], host, containersToRestart[i], command)
     time.sleep(wait)
 
 
@@ -79,7 +79,7 @@ def waitForServerActive(name, client):
         if time.time() > timeout:
             print(f'Waiting for {name} to start failed, starting other servers normally')
             break
-        if 'Server received, But no response!!' in sendToArk(ports[0], hosts[0], "broadcast Checking if server is live."):
+        if 'Server received, But no response!!' in sendToArk(ports[0], hosts[0], containersToRestart[0], "broadcast Checking if server is live."):
             print(f'Container {name} successfully started')
             break
         time.sleep(15)
@@ -152,6 +152,10 @@ while True:
         # list .mod files in mod folder
         mod_files = [ f.name for f in os.scandir(r"Mods") if not f.is_dir() ]
         mods_updated = 0
+        force_update = os.getenv('FORCE_UPDATE')
+        if force_update == 'true':
+            mods_updated += 1
+            print('Update forced')
 
         modIds = [x.replace('Mods/', '').replace('.mod', '') for x in mod_files]
         modIds.remove('111111111') # the default mod does not need to be queried and the result is missing info anyway
